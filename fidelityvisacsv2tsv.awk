@@ -1,3 +1,5 @@
+# converts Fidelity VISA CSV to UWCU TSV, also converting dates to YYYY-MM-DD.  
+# Assigns categories to many types of transactions. 
 # awk -f fidelityvisacsv2tsv.awk FidelityVISA.csv >fidelityvisa.tsv
 # sample input:
 # Date,Transaction,Name,Memo,Amount
@@ -92,11 +94,15 @@ function TransformValue(val,  newval, idx) {
 			category = "Home Improvement"
 		} else if(index(name, "THE TAVERN GRILLE") > 0) {
 			category = "Dining Out"
+		} else if(index(name, "PUMP HOUSE") > 0) {
+			category = "Dining Out"
 		} else if(index(name, "THE HOME DEPOT #0422 PAYSON") > 0) {
 			category = "Furnishings"
 		} else if(index(name, "Kindle") > 0) {
 			category = "Entertainment"
-		} else if(index(name, "SEDONAEBIKE") > 0) {
+		} else if(index(name, "Kindle") > 0) {
+			category = "Entertainment"
+		} else if(index(name, "INK CARDS & POSTAGRAM") > 0) {
 			category = "Entertainment"
 #		} else if(index(name, "") > 0) {
 #			category = ""

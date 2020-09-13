@@ -5,6 +5,8 @@
 # Lines look like:
 # "0098828602","CK",12/4/2017,($7.95),"POS 7115:PURCHASE BASHAS' #028 12/04/17 18:03 160 COFFEE POT DRIVE SEDONA A","","Groceries",$98402.13,"",
 #
+# MRR 2017-12-17
+#
 # awk -f uwcucsv2tsv.awk UWCUMRR2011.csv >UWCUMRR2011.tsv
 BEGIN {
 	ST_BEGFLD = 1
