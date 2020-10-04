@@ -3,7 +3,7 @@
 # "AccountNumber","AccountType","Posted Date","Amount","Description","Check Number","Category","Balance","Note",
 # "0098828602","CK",3/16/2018,$7000.00,"ACH:JANUS HENDERSON -INVESTMENT","","Uncategorized",$110406.46,"",
 #
-# awk -f tsvfilter.awk both-date.tsv
+# awk -f tsvfilter.awk -v months=5 both-date.tsv
 # mrr 2017-12-17; 2017-12-22
 BEGIN {
 	FS = "\t"
@@ -182,11 +182,11 @@ END {
 	LogTTY("Total AirBnb\t" airbnb)
 	totalIncome = paycheck + tamssa + airbnb
 	LogTTY("Sum of above\t" totalIncome)
-	LogTTY("Sum of above/3\t" totalIncome/3)
+	LogTTY("Sum of above/" months "\t" totalIncome/months)
 	LogTTY("")
 	LogTTY("Total Expenses\t" totalExpenses)
 	LogTTY("")
 	netIncome = totalIncome + totalExpenses
 	LogTTY("Net income over period\t" netIncome)
-	LogTTY("Net income/3\t" netIncome/3)
+	LogTTY("Net income/" months "\t" netIncome/months)
 }
