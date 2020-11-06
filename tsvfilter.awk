@@ -13,12 +13,17 @@ BEGIN {
 	incomefile = "income.tsv"
 }
 
-function LogTTY(line) {
-	print line >tty
+function LogTTY(msg) {
+	print msg >tty
 }
-function LogIncome(line) {
-	print line >incomefile
+function LogTTYAndLine(msg) {
+	LogTTY(msg)
+	LogTTY(line)
+}
+function LogIncome(msg) {
+	print msg >incomefile
 	LogTTY("next line was counted as income:")
+	LogTTY(line)
 }
 
 {
@@ -37,7 +42,7 @@ function LogIncome(line) {
 	if("Paycheck" == category) {
 		if(amount > 4000) {
 			# ignore bonus
-			LogTTY("Ignoring bonus:")
+			LogTTYAndLine("Ignoring bonus:")
 		} else {
 			LogIncome(line)
 			paycheck += amount
@@ -47,7 +52,7 @@ function LogIncome(line) {
 		tamssa += amount
 	} else if(index(desc, "JANUS HENDERSON") > 0) {
 		# ignore investment income
-		LogTTY("Ignoring investment income:")
+		LogTTYAndLine("Ignoring investment income:")
 #	} else if(0+amount > 0) {
 		#ignore income
 	} else if(index(desc, "AIRBNB PAYMENTS")>0) {
@@ -73,7 +78,7 @@ function LogIncome(line) {
 		bPrint = 1
 	} else if("2018-02-01" == date && index(desc, "ZB,N.A.") > 0) {
 		# ignore failed mortgage payment and reversal
-		LogTTY("Ignoring failed mortgage payment and reversal")
+		LogTTYAndLine("Ignoring failed mortgage payment and reversal:")
 		bPrint = 0
 #	} else if(index(desc, "CARDMEMBER SERV -WEB PYMT") > 0 && amount == -3646.72) {
 		# I though this was a one-time mortgage payment when the autopay didn't go thru,
@@ -81,39 +86,41 @@ function LogIncome(line) {
 #		category = "Mortgage / Rent"
 #		bPrint = 1
 	} else if(index(desc, "AEIS -DEBIT")>0) {
-		LogTTY("Ignoring Ameriprise monthly investment")
+		LogTTYAndLine("Ignoring Ameriprise monthly investment:")
 	} else if("" == category && 0==amount) {
 		# ignore empty records
 	} else if("Home Services" == category) {
 	} else if(index(desc, "401 JORDAN RD") > 0) {
 		category = "Tam Wellness"
 		bPrint = 1
-	} else if("Furnishings" == category) {
+	#} else if("Furnishings" == category) {
 	} else if(index(desc, "Check Number") > 0 && (-120 == 0+amount || -50 == 0+amount)) {
 		category = "Counselling"
 		bPrint = 1
 	} else if(index(desc, "GIANT #") > 0) {
 		category = "Gas / Fuel"
-		bPrint = 1		
+		bPrint = 1	
 	} else if(index(desc, "ZB,N.A. LOAN PAYMT") > 0) {
 		# unusual coding for mortgage
 		category = "Mortgage / Rent"
 		bPrint = 1
+	} else if(index(desc, "DWR AUSTIN")>0) {
+		category = "Furnishings"
+		bPrint = 1		
 	} else if("2018-01-20" == date && 1382.52 == amount) {
-		LogTTY("Ignoring refund of overpayment of insurance")
+		LogTTYAndLine("Ignoring refund of overpayment of insurance:")
 		bPrint = 0
 	} else if("Credit Card Payment" == category) {
-		#print "!credit card: " $0 >tty
-		if("0321240801" == account) {
+		if(index(desc,"ACH:PAYPAL-EBAY MC")>0) {
 			category = "Tam credit card"
 			bPrint = 1
-		} else if(index(desc, "ACH:PAYPAL-EBAY MC")>0) {
+		} else if("0321240801" == account) {
 			category = "Tam credit card"
 			bPrint = 1
 		} else if("0098828602" == account) {
 			if(index(desc, "FIA ONLINE PYMT")>0 || index(desc,"CARDMEMBER SERV -WEB PYMT")>0) {
 				# will be on VISA records
-				LogTTY("Ignoring because will be in VISA records:")
+				LogTTYAndLine("Ignoring because will be in VISA records:")
 				bPrint = 0
 			} else if(index(desc, "PAYPAL")>0) {
 				category = "Mark Paypal"
@@ -123,7 +130,7 @@ function LogIncome(line) {
 				bPrint = 1
 			}
 		} else {
-			LogTTY("!Mystery credit card: " $0)
+			LogTTYAndLine("!Mystery credit card: " $0)
 			bPrint = 1
 		}
 	} else if(index(desc, "Web Branch:TFR TO CK 360271101") > 0) {
@@ -189,4 +196,5 @@ END {
 	netIncome = totalIncome + totalExpenses
 	LogTTY("Net income over period\t" netIncome)
 	LogTTY("Net income/" months "\t" netIncome/months)
+	LogTTY("Yow!!")
 }

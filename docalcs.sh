@@ -30,17 +30,26 @@ else
 fi
 
 if true; then
+  echo Converting VISA records to visa.tsv
   awk -f ${cflowdir}/fidelityvisacsv2tsv.awk MRRVisa201903-202008.csv | awk -f ../cflow/tsvfilterbydate.awk -v oldest=2020-04-01 -v newest=2020-08-31 >visa.tsv
 else
   echo Skipping processing of VISA records
 fi
 
-awk -f ../cflow/tsvfilter.awk -v months=5 UWCU2020asorted.tsv >filtered.tsv
+#awk -f ../cflow/tsvfilter.awk -v months=5 UWCU2020asorted.tsv >filtered.tsv
 
 echo -----
 
-cat filtered.tsv visa.tsv >filteredplusvisa.tsv
+#cat filtered.tsv visa.tsv >filteredplusvisa.tsv
 
-awk -f ../cflow/sumfin.awk -v divideby=5 filteredplusvisa.tsv | sort -k2,2 -n -t$'\t'
+echo Concatenating date-filtered UWCU and VISA records to unfiltered.tsv
+cat UWCU2020asorted.tsv visa.tsv >unfiltered.tsv
+
+echo Running main filtering script, to filtered.tsv
+awk -f ../cflow/tsvfilter.awk -v months=5 unfiltered.tsv >filtered.tsv
+
+echo ----
+
+awk -f ../cflow/sumfin.awk -v divideby=5 filtered.tsv | sort -k2,2 -n -t$'\t'
 
 ls -ltr | tail -5
