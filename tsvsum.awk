@@ -13,6 +13,7 @@ BEGIN {
     total = 0
 }
 
+# Heapsort, from https://unix.stackexchange.com/questions/560185/
 #.. Construct the heap, then unfold it.
 function hSort (A, Local, n, j, e) {
     for (j in A) ++n;
