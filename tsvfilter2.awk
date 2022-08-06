@@ -10,6 +10,9 @@
 # AccountNumber	AccountType	Posted Date	Amount	Description	Check Number	Category	Balance	Note	
 # 0098828602	CK	2022-08-02	-225.47	ACH:ATT -Payment		Phone	126762.55		
 #
+# Typical use:
+# awk -f tsvfilter2.awk data/uwcumrr-2019-2021.tsv data//uwcushared-2019-2021-tam.tsv data/MRRVisaSharedExp2019-2021.tsv | awk -f tsvsum2.awk
+#
 # Mark Riordan   2022-08-03
 
 BEGIN {
@@ -31,6 +34,16 @@ BEGIN {
     arySharedExp["Cable / Satellite TV"] = 1
     arySharedExp["Auto Insurance"] = 1
     arySharedExp["Utilities"] = 1
+
+    # From MRR Shared 2010
+    # But note that we will remove Mortgage, since it no longer applies.
+    arySharedExp["Mortgage / Rent"] = 1
+    arySharedExp["Personal Care"] = 1
+    arySharedExp["Home"] = 1
+    arySharedExp["Pharmacy"] = 1
+    arySharedExp["Doctor"] = 1
+    arySharedExp["Eyecare"] = 1
+    arySharedExp["Kids health"] = 1
 }
 
 {
@@ -62,17 +75,22 @@ BEGIN {
         # Autoinvest is not an expense per se. 
         bPrint = 0
     } else if(index(desc,"ACH:CARDMEMBER SERV -WEB PYMT")>0) {
-        # For now, we will pass VISA card payments through.
-        # Eventually I may ignore them here & process those from the
-        # Fidelity VISA website, to be more precise.  Likely many
-        # of these would be categorized as shared.
-    # } else if(index(desc,"")>0) {
-
+        # We pass VISA card payments through, but tsvsum2.awk
+        # will process them specially in conjunction with VISA payment
+        # records from the fidelityrewards.com site.
+    } else if(index(desc,"Bedrock Landscape")>0) {
+        category = "Home Improvement"
+    } else if(category=="Mortgage / Rent") {
+        bPrint = 0
     }
 
-    # Map certain categories to shared expenses.  
-    if(category in arySharedExp) {
-        category = "SharedExp"
+    if(bCollapseToSharedvsPersonal) {
+        # Map certain categories to shared expenses.  
+        if(category in arySharedExp || account=="visa") {
+            category = "SharedExp"
+        } else {
+            category = "Personal"
+        }
     }
 
     if(bPrint) {
