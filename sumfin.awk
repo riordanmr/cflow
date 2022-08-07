@@ -16,6 +16,7 @@ BEGIN {
 }
 END {
 	for(categ in tblAmounts) {
-		print categ "\t" sprintf("%.2f", tblAmounts[categ]) "\t" sprintf("%.2f", tblAmounts[categ] / divideby)
+		# print categ "\t" sprintf("%.2f", tblAmounts[categ]) "\t" sprintf("%.2f", tblAmounts[categ] / divideby)
+		print categ "\t" sprintf("%.2f", tblAmounts[categ] / divideby)
 	}
 }

@@ -61,7 +61,7 @@ BEGIN {
 
 END {
     totVISAMRRPersonal = totVISAMRR - totVISAMRRShared
-    totAnnualTJRHerChecking = -1600*12
+    totAnnualTJRHerChecking = -1500*12
 
     totAnnualTJRPersonal = (totPersTJRSharedChecking / nYears) + totAnnualTJRHerChecking
     totAnnualTJRShared = totSharedTJR / nYears
