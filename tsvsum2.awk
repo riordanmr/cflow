@@ -74,12 +74,57 @@ END {
 
     totAnnualExpenses = totAnnualTJRPersonal + totAnnualTJRShared + totAnnualMRRPersonal + totAnnualMRRShared
 
+    # As of this writing, inflation is 9.1%; see
+    # https://www.usinflationcalculator.com/inflation/current-inflation-rates/
+    # but I think this is a blip; see
+    # https://www.kiplinger.com/economic-forecasts/inflation
+    # "The inflation rate is likely to stay close to 9% the rest of the year, then decline gradually after that, ending 2023 at about 3%."
+    # so I am using a smaller inflation rate.
+    inflationPercent = 7.0
+    inflationFactor = 1.0 + (inflationPercent / 100.0)
+    adjTotAnnualTJRPersonal = inflationFactor * totAnnualTJRPersonal
+    adjTotAnnualMRRPersonal = inflationFactor * totAnnualMRRPersonal
+    adjTotAnnualShared = inflationFactor * (totAnnualTJRShared+totAnnualMRRShared)
+    adjTotAnnualExpenses = inflationFactor * totAnnualExpenses
+
     totAnnualIncome = 1500*12 + 3800000*0.03
 
-    print int(totAnnualTJRPersonal) "\t" "Tam personal"
-    print int(totAnnualMRRPersonal) "\t" "Mark personal"
-    print int(totAnnualTJRShared+totAnnualMRRShared) "\t" "Shared expenses"
+    # Debugging output.  I'm being paranoid because I don't want to get the budget wrong.
+    if(0) {
+        print "totVISAMRR = " totVISAMRR
+        print "totVISAMRRShared = " totVISAMRRShared
+        print "totVISAMRRPersonal = " totVISAMRRPersonal
+        print "totPersTJRSharedChecking = " totPersTJRSharedChecking
+        print "totSharedTJR = " totSharedTJR " from shared acct"
+        print "totAnnualTJRHerChecking = " totAnnualTJRHerChecking
+        print "totAnnualTJRPersonal = " totAnnualTJRPersonal
+        print "totAnnualTJRShared = " totAnnualTJRShared
+        print "totSharedMRR = " totSharedMRR " after adding another property tax payment"
+        print "totAnnualMRRPersonal = " totAnnualMRRPersonal
+        print "totAnnualMRRShared = " totAnnualMRRShared
+        print "totAnnualExpenses = " totAnnualExpenses
+        print "inflationFactor = " inflationFactor
+        print "adjTotAnnualTJRPersonal = " adjTotAnnualTJRPersonal
+        print "adjTotAnnualMRRPersonal = " adjTotAnnualMRRPersonal
+        print "adjTotAnnualShared = " adjTotAnnualShared
+        print "adjTotAnnualExpenses = " adjTotAnnualExpenses
+    }
+
+    print "Results of analysis of historical expenses:"
+    print int(adjTotAnnualTJRPersonal) "\t" "Tam personal (adjusted for inflation)"
+    print int(adjTotAnnualMRRPersonal) "\t" "Mark personal (adjusted for inflation)"
+    print int(adjTotAnnualShared) "\t" "Shared expenses (adjusted for inflation)"
     print "--------"
-    print int(totAnnualExpenses) "\t" "Total annual expenses"
+    print int(adjTotAnnualExpenses) "\t" "Total annual expenses (adjusted for " inflationPercent "% inflation)"
+    print ""
+    print "Planning for the future:"
     print int(totAnnualIncome) "\t" "Total annual income"
+
+    monthlyBudgetPersonalMRR = -3000
+    monthlyBudgetPersonalTJR = -3000
+    monthlyBudgetShared = adjTotAnnualShared/12
+    projectedAnnualBudget = 12*monthlyBudgetPersonalMRR + 12*monthlyBudgetPersonalTJR + adjTotAnnualShared
+    print "Assuming $" monthlyBudgetPersonalMRR "/month for Mark and $" monthlyBudgetPersonalTJR "/month for Tam"
+    print "for discretionary expenses, and $" monthlyBudgetShared "/month for shared expenses,"
+    print "the total annual budget will be $" projectedAnnualBudget "."
 }
