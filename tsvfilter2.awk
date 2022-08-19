@@ -21,12 +21,14 @@ BEGIN {
     # If a category name appears in this array, it means the category should be
     # considered a shared expense.
     arySharedExp["Counselling"] = 1
+    arySharedExp["counseling"] = 1
     arySharedExp["Sewer"] = 1
     arySharedExp["Healthcare"] = 1
     arySharedExp["Water"] = 1
     arySharedExp["Home Improvement"] = 1
     arySharedExp["Phone"] = 1
     arySharedExp["Propane"] = 1
+    arySharedExp["Internet"] = 1
     arySharedExp["Taxes"] = 1
     arySharedExp["Local Tax"] = 1
     arySharedExp["Federal Tax"] = 1
@@ -42,8 +44,15 @@ BEGIN {
     arySharedExp["Home"] = 1
     arySharedExp["Pharmacy"] = 1
     arySharedExp["Doctor"] = 1
+    arySharedExp["Dentist"] = 1
     arySharedExp["Eyecare"] = 1
     arySharedExp["Kids health"] = 1
+    arySharedExp["Pets"] = 1
+    arySharedExp["Veterinary"] = 1
+    arySharedExp["Pet Food & Supplies"] = 1
+    arySharedExp[""] = 1
+    arySharedExp[""] = 1
+    arySharedExp[""] = 1
 }
 
 {

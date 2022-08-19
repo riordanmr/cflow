@@ -87,7 +87,9 @@ END {
     adjTotAnnualShared = inflationFactor * (totAnnualTJRShared+totAnnualMRRShared)
     adjTotAnnualExpenses = inflationFactor * totAnnualExpenses
 
-    totAnnualIncome = 1500*12 + 3800000*0.03
+    totAnnualTamSS = 1600*12
+    totAnnualWithdrawls = 3800000*0.03
+    totAnnualIncome = totAnnualTamSS + totAnnualWithdrawls
 
     # Debugging output.  I'm being paranoid because I don't want to get the budget wrong.
     if(0) {
@@ -117,14 +119,22 @@ END {
     print "--------"
     print int(adjTotAnnualExpenses) "\t" "Total annual expenses (adjusted for " inflationPercent "% inflation)"
     print ""
-    print "Planning for the future:"
-    print int(totAnnualIncome) "\t" "Total annual income"
+    print "Proposed plan for the future"
+    print "Income:"
+    print "$" int(totAnnualTamSS) "\t" "Tam's SS income"
+    print "$" int(totAnnualWithdrawls) "\t" "Selling investments"
+    print "--------"
+    print "$" int(totAnnualIncome) "\t" "Total annual income"
+    print ""
 
+    print "Expenses:"
     monthlyBudgetPersonalMRR = -3000
-    monthlyBudgetPersonalTJR = -3000
+    monthlyBudgetPersonalTJR = -3100
     monthlyBudgetShared = adjTotAnnualShared/12
     projectedAnnualBudget = 12*monthlyBudgetPersonalMRR + 12*monthlyBudgetPersonalTJR + adjTotAnnualShared
-    print "Assuming $" monthlyBudgetPersonalMRR "/month for Mark and $" monthlyBudgetPersonalTJR "/month for Tam"
-    print "for discretionary expenses, and $" monthlyBudgetShared "/month for shared expenses,"
-    print "the total annual budget will be $" projectedAnnualBudget "."
+    print "$" 12*monthlyBudgetPersonalMRR " /year or \t$" monthlyBudgetPersonalMRR " /month \t" "Mark's discretionary budget"
+    print "$" 12*monthlyBudgetPersonalTJR " /year or \t$" monthlyBudgetPersonalTJR "/ month \t"  "Tam's discretionary budget"
+    print "$" int(12*monthlyBudgetShared )" /year or \t$" int(monthlyBudgetShared) " /month\t"  "Shared expenses budget"
+    print "--------"    
+    print "$" projectedAnnualBudget " /year or \t$" int(projectedAnnualBudget/12) " /month\t" "Total budget"
 }
