@@ -1,0 +1,6 @@
+.DS_Store
+*.tsv
+*.csv
+*.zip
+*.numbers
+*.out
