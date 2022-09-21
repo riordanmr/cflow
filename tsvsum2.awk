@@ -88,7 +88,7 @@ END {
     adjTotAnnualExpenses = inflationFactor * totAnnualExpenses
 
     totAnnualTamSS = 1600*12
-    totAnnualWithdrawls = 3800000*0.03
+    totAnnualWithdrawls = 3800000*0.0315
     totAnnualIncome = totAnnualTamSS + totAnnualWithdrawls
 
     # Debugging output.  I'm being paranoid because I don't want to get the budget wrong.
@@ -128,8 +128,8 @@ END {
     print ""
 
     print "Expenses:"
-    monthlyBudgetPersonalMRR = -3000
-    monthlyBudgetPersonalTJR = -3100
+    monthlyBudgetPersonalMRR = -3290
+    monthlyBudgetPersonalTJR = -3390
     monthlyBudgetShared = adjTotAnnualShared/12
     projectedAnnualBudget = 12*monthlyBudgetPersonalMRR + 12*monthlyBudgetPersonalTJR + adjTotAnnualShared
     print "$" 12*monthlyBudgetPersonalMRR " /year or \t$" monthlyBudgetPersonalMRR " /month \t" "Mark's discretionary budget"
