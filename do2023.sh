@@ -25,3 +25,5 @@ echo
 awk -f /Users/mrr/Documents/GitHub/cflow/sumfin.awk -v divideby=2 allproc.tsv | sort -t$'\t' -k2nr >catsums.tsv
 cat catsums.tsv
 
+# Create a file sorted by category (mostly so the Uncategorized entries are together).
+sort -t$'\t' -k7 allproc.tsv >allsorted.tsv
