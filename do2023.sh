@@ -27,3 +27,6 @@ cat catsums.tsv
 
 # Create a file sorted by category (mostly so the Uncategorized entries are together).
 sort -t$'\t' -k7 allproc.tsv >allsorted.tsv
+
+# Create a spreadsheet containing the category sums.
+awk -f /Users/mrr/Documents/GitHub/cflow/makesummarysheet.awk catsums.tsv >budget2023.tsv

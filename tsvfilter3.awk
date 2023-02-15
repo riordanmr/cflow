@@ -54,7 +54,7 @@ function Matches(myline, target) {
 		# 0098828602 is MRR2011 (Used as holding tank starting Aug 2022)
 		# 0098828601 is Shared2010
         # 0098828604 is MRR2022 (Mark's personal)
-		if(index(desc,"360271101")>0) {
+		if(Matches(desc," 360271101")) {
 			category = "Casey"
 			bPrint = 1
 		} else {
@@ -64,13 +64,24 @@ function Matches(myline, target) {
         # Ignore MoneyLink transfers. Dunno why UWCU doesn't categorize
         # these as transfers.
         bPrint = 0
+    } else if(Matches(desc,"AMZN Digital") || Matches(line,"AMAZON.COM") || 
+       Matches(line, "Amzn.com") || Matches(line, "Amazon.com")) {
+		# Because this comes before the check for returns, returns from Amazon will
+		# be credited to the same category as purchases.
+		if(account=="0098828601" || account=="0321240801") {
+			category = "Tam"
+		} else if(account=="0098828602" || account=="0098828604" ||
+		  account=="visa") {
+			category = "Mark"
+		} else {
+			category = "Error!"
+		}
     } else if(amount > 0) {
         # allow returns to go through, so they will cancel the original purchases.
-        if(index(line,"RETURN ")>0) {
-            # If it's Amazon, make that the category, else retain category.
-            if(index(line,"AMAZON.COM")>0 || index(line, "AMZN Digital")>0) {
-                category = "Amazon"
-            }
+		if(Matches(desc,"TFR FROM SV 360271101")) {
+			# Returns from Casey
+			category = "Casey"
+			bPrint = 1
         } else {
             LogIncome(line)
             bPrint = 0
@@ -86,9 +97,6 @@ function Matches(myline, target) {
 	#} else if(index(desc, "AIRBNB PAYMENTS")>0) {
 	#	LogIncome(line)
 	#	airbnb += amount
-    } else if(Matches(desc,"AMZN Digital") || Matches(line,"AMAZON.COM") || 
-       Matches(line, "Amzn.com") || Matches(line, "Amazon.com")) {
-        category = "Amazon"
 	} else if(index(desc, "SAFEWAY STORE 1207") > 0) {
 		category = "Groceries"
 	} else if(index(desc, "NATURAL GROCERS") > 0) {
@@ -96,7 +104,7 @@ function Matches(myline, target) {
 	} else if(index(desc, "WALGREENS") > 0) {
 		category = "Pharmacy"
 	} else if(index(desc, "CITY OF SEDONA -DEBITS") > 0) {
-		category = "Utilities"
+		category = "Sewer"
 	} else if(index(desc, "APL* ITUNES.COM") > 0) {
 		category = "Entertainment"
    	} else if(index(desc, "CVS/PHARMACY") > 0) {
@@ -116,6 +124,9 @@ function Matches(myline, target) {
 		} else if(account=="0321240801") {
 			category = "Tam"
 		}
+	#} else if(Matches(desc,"YAVAPAI COUNTY") || Matches(desc,"Check Number xxxx")) {
+		# Unfortunately, I have not been able to identify all property tax payments.
+	#	category = "Property taxes"
    	} else if(index(desc, "WILDFLOWER") > 0 || index(desc,"CHIPOTLE ")>0 ||
        index(desc,"FAMOUS PIZ")>0 || index(desc,"SEDONA CREPES")>0 ||
        Matches(desc,"RED CHOPSTICK") || Matches(desc,"CAFE JOSE") || 
@@ -158,7 +169,7 @@ function Matches(myline, target) {
    	} else if(Matches(desc, "WWW.1AND1.COM")) {
         category = "Mark"
    	} else if(Matches(desc, "TAYLOR WASTE")) {
-        category = "Utilities"
+        category = "Trash"
    	} else if(Matches(desc, "EDF HTTPS") || Matches(desc,"WWW.EDF.ORG") ||
        Matches(desc,"BF VIDKRIT") || Matches(desc,"Sedona Pubic Lib")) {
         category = "Charity"
@@ -188,8 +199,8 @@ function Matches(myline, target) {
         category = "Travel"
    	} else if(Matches(desc, "PALM BEACH SHORES RESOR")) {
         category = "Timeshare"
-   	} else if(Matches(desc, "xyzzy")) {
-        category = ""
+   	} else if(Matches(desc, "APS electric")) {
+        category = "Electric"
    	} else if(Matches(desc, "xyzzy")) {
         category = ""
    	} else if(Matches(desc, "xyzzy")) {
@@ -234,10 +245,10 @@ function Matches(myline, target) {
 		bPrint = 1
 	} else if("Credit Card Payment" == category) {
 		if(index(desc,"ACH:PAYPAL-EBAY MC")>0) {
-			category = "Tam credit card"
+			category = "Tam"
 			bPrint = 1
 		} else if("0321240801" == account || "0098828601" == account) {
-			category = "Tam credit card"
+			category = "Tam"
 			bPrint = 1
 		} else if("0098828602" == account) {
 			if(index(desc, "FIA ONLINE PYMT")>0 || index(desc,"CARDMEMBER SERV -WEB PYMT")>0) {
@@ -245,7 +256,7 @@ function Matches(myline, target) {
 				#LogTTYAndLine("Ignoring because will be in VISA records:")
 				bPrint = 0
 			} else if(index(desc, "PAYPAL")>0) {
-				category = "Mark Paypal"
+				category = "Mark"
 				bPrint = 1
 			} else {
 				category = "Unknown Credit Card"
@@ -277,8 +288,8 @@ function Matches(myline, target) {
         category = "Travel"
     } else if("Life Insurance" == category) {
         category = "Insurance"
-    } else if("xyzzy" == category) {
-        category = ""
+    } else if("Food & Dining" == category) {
+        category = "Dining Out"
     } else if("visa" == account) {
         category = "Mark"
     } else if("0098828604" == account) {
