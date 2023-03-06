@@ -50,6 +50,7 @@ function hUp (j, e, n, V, Local, k) {
     }
     arySums[++nout] = area "\t" category "\t" catsum
 }
+
 END {
     # Sort the categories alphabetically, so records in the same area are together
     sortfld = 1
@@ -57,6 +58,9 @@ END {
     #    print arySums[j]
     #}
     #print ""
+    print "Mark and Tammy Riordan 2023 Predicted Cash Flow based on 2021-2022 Cash Flow"
+    print ""
+    row = 2
     hSort(arySums)
     firstRowOfArea = 2
     for(j=1; j<=nout; j++) {
